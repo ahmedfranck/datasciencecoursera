@@ -107,3 +107,73 @@ In order to complete this assignment, you must do the following:
 
 This assignment will be graded via peer assessment.
 
+---
+
+# UCI HAR Tidy Data Project
+
+This repository-style submission transforms the Human Activity Recognition Using Smartphones dataset into an independent tidy dataset containing the average of every selected mean and standard-deviation measurement for each subject and activity.
+
+## Files
+
+- `run_analysis.R`: complete reproducible analysis.
+- `tidy_data.txt`: final comma-delimited tidy dataset with a header row.
+- `CodeBook.md`: variables, units, source-data interpretation, and transformations.
+
+## How the analysis works
+
+The script performs the following operations:
+
+1. Downloads and extracts the UCI HAR archive when it is not already available.
+2. Reads the feature names and activity lookup table.
+3. Reads the training and test measurements, activity identifiers, and subject identifiers.
+4. Merges the training and test observations with `rbind()`.
+5. Keeps the 66 measurements whose original names explicitly contain `-mean()` or `-std()`.
+6. Replaces numeric activity identifiers with descriptive activity names.
+7. Expands abbreviated feature names into descriptive names.
+8. Groups the data by subject and activity and computes the arithmetic mean of each selected measurement.
+9. Sorts the result by subject and the activity order supplied in `activity_labels.txt`.
+10. Writes `tidy_data.txt`.
+
+The selection deliberately excludes `meanFreq()` variables and angle variables containing `mean` as part of an argument. This follows the strict reading of measurements on the mean and standard deviation: features calculated by the source dataset's `mean()` and `std()` functions.
+
+## Running the analysis
+
+Place `run_analysis.R` in an empty working directory and run:
+
+```r
+source("run_analysis.R")
+```
+
+Alternatively, from a terminal with R installed:
+
+```text
+Rscript run_analysis.R
+```
+
+The script uses only base R. Internet access is needed only when the source ZIP is not already present.
+
+## Expected output
+
+The final dataset contains:
+
+- 30 subjects;
+- 6 activities per subject;
+- 180 observations;
+- 66 averaged measurement variables;
+- 68 columns in total, including `subject` and `activity`.
+
+Each row is one unique subject-activity combination, and each column is one variable. There are no duplicate subject-activity rows and no missing values.
+
+## Reading the submitted data
+
+```r
+tidy <- read.table(
+  "tidy_data.txt",
+  header = TRUE,
+  sep = ",",
+  check.names = FALSE
+)
+
+dim(tidy)
+# 180 68
+```
